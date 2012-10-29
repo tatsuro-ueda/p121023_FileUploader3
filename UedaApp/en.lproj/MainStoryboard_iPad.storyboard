@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="12C60" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" initialViewController="oT2-md-Ie5">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1929"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="Rev-3c-4Hn">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="oT2-md-Ie5" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Kxw-4N-29C">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="QRN-B8-IRq" kind="relationship" relationship="rootViewController" id="cHx-oP-ZpI"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="TDN-g2-eSH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-782" y="-471"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="FAV-5A-o57">
+            <objects>
+                <viewController id="QRN-B8-IRq" customClass="ViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="rCU-Kn-pZP">
+                        <rect key="frame" x="0.0" y="64" width="768" height="960"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S9C-bp-eHf">
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <segue destination="Ohz-fB-WIv" kind="embed" id="TJp-yu-DcX"/>
+                                </connections>
+                            </containerView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VCK-Xt-SZB">
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="ISJ-Cw-f6k">
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="S9C-bp-eHf" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="4Xk-Ei-k6g"/>
+                            <constraint firstItem="S9C-bp-eHf" firstAttribute="top" secondItem="rCU-Kn-pZP" secondAttribute="top" constant="20" symbolic="YES" type="default" id="4nN-AR-f5O"/>
+                            <constraint firstItem="S9C-bp-eHf" firstAttribute="leading" secondItem="rCU-Kn-pZP" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="C7B-WX-Dvp"/>
+                            <constraint firstAttribute="trailing" secondItem="ISJ-Cw-f6k" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="DVW-29-t5C"/>
+                            <constraint firstAttribute="bottom" secondItem="ISJ-Cw-f6k" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="Edg-uc-z80"/>
+                            <constraint firstItem="VCK-Xt-SZB" firstAttribute="top" secondItem="rCU-Kn-pZP" secondAttribute="top" constant="20" symbolic="YES" type="default" id="S6t-El-ChP"/>
+                            <constraint firstAttribute="bottom" secondItem="VCK-Xt-SZB" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="UBn-hq-m9F"/>
+                            <constraint firstItem="VCK-Xt-SZB" firstAttribute="leading" secondItem="rCU-Kn-pZP" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="VM5-g1-SFz"/>
+                            <constraint firstAttribute="bottom" secondItem="S9C-bp-eHf" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="VZU-N5-9Ho"/>
+                            <constraint firstItem="ISJ-Cw-f6k" firstAttribute="leading" secondItem="rCU-Kn-pZP" secondAttribute="leading" constant="20" symbolic="YES" type="default" id="XT8-dd-OmP"/>
+                            <constraint firstItem="ISJ-Cw-f6k" firstAttribute="top" secondItem="rCU-Kn-pZP" secondAttribute="top" constant="20" symbolic="YES" type="default" id="jgF-Ny-ZaE"/>
+                            <constraint firstAttribute="trailing" secondItem="VCK-Xt-SZB" secondAttribute="trailing" constant="20" symbolic="YES" type="default" id="kcI-LZ-OcG"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="hl8-Ig-Fbc">
+                        <barButtonItem key="leftBarButtonItem" title="写真を選ぶ" id="9Zz-Zi-4up">
+                            <connections>
+                                <action selector="selectImage:" destination="QRN-B8-IRq" id="2hl-yV-2cs"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="検索" id="V3e-Kl-vWm">
+                            <connections>
+                                <action selector="searchDb:" destination="QRN-B8-IRq" id="DUV-5c-9oQ"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="imageView" destination="ISJ-Cw-f6k" id="3fi-3c-4nf"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ozP-2c-RDJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="66" y="-568"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="0cp-nE-uZt">
+            <objects>
+                <viewController id="Ohz-fB-WIv" sceneMemberID="viewController">
+                    <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Dgw-ru-aj9">
+                        <rect key="frame" x="0.0" y="0.0" width="728" height="920"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <toolbarItems/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DR5-bg-ZXQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+    <classes>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="ViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="searchDb:"/>
+                <relationship kind="action" name="selectImage:"/>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+    </classes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar" statusBarStyle="blackTranslucent"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination"/>
+    </simulatedMetricsContainer>
+</document>
