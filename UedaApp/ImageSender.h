@@ -9,9 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "AFNetworking.h"
 
-@interface ImageSender : AFHTTPClient<NSURLConnectionDataDelegate, NSURLConnectionDelegate>
+@interface ImageSender : AFHTTPClient<NSURLConnectionDataDelegate, NSURLConnectionDelegate,UIAlertViewDelegate>
 {
     NSMutableData       *buffer;
+    UIAlertView*        _infoAlertView;
 }
 
 @property NSString *html;

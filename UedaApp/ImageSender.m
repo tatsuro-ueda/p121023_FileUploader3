@@ -75,11 +75,6 @@
     NSLog(@"%@", response);
 }
 
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-    NSLog(@"%@", error);
-}
-
 - (BOOL)connection:(NSURLConnection *)connection canAuthenticateAgainstProtectionSpace:(NSURLProtectionSpace *)protectionSpace {
     return [protectionSpace.authenticationMethod isEqualToString:NSURLAuthenticationMethodServerTrust];
 }
@@ -94,12 +89,51 @@
     [challenge.sender continueWithoutCredentialForAuthenticationChallenge:challenge];
 }
 
--(void)connectionDidFinishLoading:(NSURLConnection *)connection
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    NSLog(@"Succeed!! Received %d bytes of data", [buffer length]);
     _html = [NSString encodedStringWithData:buffer];
-//    _html = [[NSString alloc] initWithData:buffer encoding:NSUTF8StringEncoding];
+    //    _html = [[NSString alloc] initWithData:buffer encoding:NSUTF8StringEncoding];
+    NSLog(@"Succeed!! Received %d bytes of data", [buffer length]);
     NSLog(@"%@", _html);
+
+    // 通知を作成する
+    NSString *searchDb1 = [NSString stringWithFormat:@"searchDb1"];
+    NSNotification *n = [NSNotification notificationWithName:searchDb1 object:self];
+    
+    // 通知実行！
+    [[NSNotificationCenter defaultCenter] postNotification:n];
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+//    _error = @"サーバに接続できません。ネットワークの環境をご確認ください。\n\n";
+//    _error = [_error stringByAppendingString:error.debugDescription];
+    
+    
+    _infoAlertView = [[UIAlertView alloc] init];
+    _infoAlertView.title = [NSString stringWithFormat:@"エラー"];
+    _infoAlertView.message = @"サーバに接続できません。ネットワークの環境をご確認ください。";
+    [_infoAlertView addButtonWithTitle:@"詳細"];
+    [_infoAlertView addButtonWithTitle:@"了解"];
+    _infoAlertView.delegate = self;
+    [_infoAlertView show];
+    
+    _error = error;
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 1:
+            // アラートを消す
+            [_infoAlertView dismissWithClickedButtonIndex:0 animated:YES];
+            break;
+            
+        default:
+            [_infoAlertView dismissWithClickedButtonIndex:0 animated:YES];
+            [MyUtility alertError:_error.debugDescription];
+            break;
+    }
 }
 
 - (void)upload:(UIImage *)image withName:(NSString *)name withPath:(NSString*)path withMimeType:(NSString *)mimeType
@@ -111,7 +145,7 @@
         return;
     }
     if ([name isEqual:nil]) {
-        _error = @"内部エラー：アップロードするファイルの名前がありません";
+        _error = @"内部エラー：アップロードするファイルにつける名前がありません";
         [MyUtility alertError:_error];
         return;
     }

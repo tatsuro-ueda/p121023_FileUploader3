@@ -12,7 +12,7 @@
 #import "MyUtility.h"
 
 static const float UPLOAD_SEC = 5.0;
-static const float SEARCH_SEC = 5.0;
+//static const float SEARCH_SEC = 5.0;
 static const float SHOW_SEC = 5.0;
 
 @interface ViewController ()
@@ -25,6 +25,15 @@ static const float SHOW_SEC = 5.0;
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+
+    // デフォルトの通知センターを取得する
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    
+    // 通知センターに通知要求を登録する
+    // この例だと、通知センターに"requestTableData"という名前の通知がされた時に、
+    // requestTableDataメソッドを呼び出すという通知要求の登録を行っている。
+    NSString *searchDb1 = [NSString stringWithFormat:@"searchDb1"];
+    [nc addObserver:self selector:@selector(searchDb1) name:searchDb1 object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -55,8 +64,6 @@ static const float SHOW_SEC = 5.0;
 {
     // ユーザーの選択した写真を取得し、imageViewというUIImageView型のフィールドのイメージに設定する
     UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-    _imageView.image = image;
-    [self fadeImageViewOpacityFromZeroToOne:_imageView];
     
     // UIPopoverControllerを閉じる
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -67,6 +74,30 @@ static const float SHOW_SEC = 5.0;
     {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
+
+    // 前の画像が残っている場合
+    if (_imageView.image != nil) {
+        _image = image;
+        [self fadeImageViewOpacityFromOneToZero:_imageView];
+    }
+    else
+    {
+        _imageView.image = image;
+        [self fadeImageViewOpacityFromZeroToOne:_imageView];
+    }
+}
+
+// 複数のアニメーションのdelegateに同じオブジェクトを設定している場合には、
+// 引数animが処理対象のアニメーションと一致するかをチェックし、
+// 一致した場合にのみ処理を行う。
+- (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag
+{
+//    NSLog(@"%@", _imageView.layer.animationKeys);
+//    if (anim == [_imageView.layer animationForKey:@"opacity1to0"]) {
+//        NSLog(@"second animation called");
+        _imageView.image = _image;
+        [self fadeImageViewOpacityFromZeroToOne:_imageView];
+//    }
 }
 
 - (NSURL *)getUrlFromKeyword:(NSString *)keyword
@@ -112,7 +143,10 @@ static const float SHOW_SEC = 5.0;
 
     // サーバにログイン
     [imageSender getHtmlWithPath:@"/piXserve/service/login.jsp" withOption:@"?username=admin&password="];
+}
 
+- (void)searchDb1
+{
     // 「読込中」のアラートビューを表示する
     _infoAlertView = [[UIAlertView alloc] init];
     _infoAlertView.title = [NSString stringWithFormat:@"情報"];
@@ -123,12 +157,7 @@ static const float SHOW_SEC = 5.0;
     [_infoAlertView addSubview:ai];
     [_infoAlertView show];
     [ai startAnimating];
-    
-    [self performSelector:@selector(searchDb1) withObject:nil afterDelay:3.0];
-}
 
-- (void)searchDb1
-{
     // 画像をサーバにアップロード
     _filename = [[self getStrftime] stringByAppendingString:@".jpg"];
     NSLog(@"%@", _filename);
@@ -160,21 +189,37 @@ static const float SHOW_SEC = 5.0;
         NSLog(@"%@", parser.match);
     }
 
-    [self performSelector:@selector(searchDb3) withObject:nil afterDelay:SEARCH_SEC];
-}
-
-- (void)searchDb3
-{
+//    [self performSelector:@selector(searchDb3) withObject:nil afterDelay:SEARCH_SEC];
+//}
+//
+//- (void)searchDb3
+//{
     // アラートを消す
     [_infoAlertView dismissWithClickedButtonIndex:0 animated:YES];
     
     _infoAlertView = [[UIAlertView alloc] init];
     _infoAlertView.title = [NSString stringWithFormat:@"情報"];
-    _infoAlertView.message = [NSString stringWithFormat:@"これは\n\n「%@」\n\nの画像です。\n\nインターネットで\n他の画像を検索します。", parser.match];
+    _infoAlertView.message = [NSString stringWithFormat:@"これは\n\n「%@」\n\nの画像です。\n\nインターネットで\n他の画像を検索しますか？", parser.match];
+    [_infoAlertView addButtonWithTitle:@"検索する"];
+    [_infoAlertView addButtonWithTitle:@"キャンセル"];
+    _infoAlertView.delegate = self;
     [_infoAlertView show];
     _infoAlertView.delegate = self;
 
-    [self performSelector:@selector(searchDb4) withObject:nil afterDelay:SHOW_SEC];
+//    [self performSelector:@selector(searchDb4) withObject:nil afterDelay:SHOW_SEC];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    switch (buttonIndex) {
+        case 1:
+            [_infoAlertView dismissWithClickedButtonIndex:0 animated:YES];
+            break;
+            
+        default:
+            [self searchDb4];
+            break;
+    }
 }
 
 - (void)searchDb4
@@ -210,8 +255,22 @@ static const float SHOW_SEC = 5.0;
     animeFlash.toValue = [NSNumber numberWithFloat:1.0];
     
     putImageView.layer.opacity = 0.0;
-    [putImageView.layer addAnimation:animeFlash forKey:@"animetePosition"];
+    [putImageView.layer addAnimation:animeFlash forKey:@"opacity0to1"];
     putImageView.layer.opacity = 1.0;
+}
+
+- (void)fadeImageViewOpacityFromOneToZero:(UIImageView*)putImageView
+{
+    // アニメーション
+    CABasicAnimation* animeFlash = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    animeFlash.duration = 0.2;
+    animeFlash.fromValue = [NSNumber numberWithFloat:1.0];
+    animeFlash.toValue = [NSNumber numberWithFloat:0.0];
+    animeFlash.delegate = self;
+    
+    putImageView.layer.opacity = 1.0;
+    [putImageView.layer addAnimation:animeFlash forKey:@"opacity1to0"];
+    putImageView.layer.opacity = 0.0;
 }
 
 @end

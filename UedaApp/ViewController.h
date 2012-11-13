@@ -11,7 +11,7 @@
 
 @class ImageSender, Parser;
 
-@interface ViewController : UIViewController<UINavigationControllerDelegate, UIImagePickerControllerDelegate>
+@interface ViewController : UIViewController<UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIAlertViewDelegate>
 {
     UIPopoverController     *_imagePopController;
     ImageSender                  *imageSender;
@@ -21,6 +21,7 @@
     NSDateFormatter         *formatter;
     NSString                *_filename;
     NSOperationQueue        *_queue;
+    UIImage                 *_image;
 }
 
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;
